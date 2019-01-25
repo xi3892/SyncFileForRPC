@@ -3,3 +3,8 @@
 ################################################################################
 
 /SyncServer/obj/Debug
+/SyncServer/bin/Debug
+/SyncClient/obj/Debug
+/SysncEntity/bin/Debug
+/SysncEntity/obj/Debug
+/.vs/SyncServer/v15
