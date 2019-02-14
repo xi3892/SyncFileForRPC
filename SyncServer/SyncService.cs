@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NewLife.Data;
 using NewLife.Log;
 using NewLife.Remoting;
+using SysncEntity;
 
 namespace SyncServer
 {
@@ -13,12 +14,13 @@ namespace SyncServer
     class SyncService
     {
         /// <summary>发送文件</summary>
-        /// <param name="pk"></param>
+        /// <param name="pkList"></param>
         [Api(nameof(SendFile))]
-        public Boolean SendFile(Packet pk)
+        public Boolean SendFile(IList<Packet> pkList)
         {
+            var set = Setting.Current;
 
-
+            Helper.Write(pkList, set.RootPath);
 
             return true;
         }

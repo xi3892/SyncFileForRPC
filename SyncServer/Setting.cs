@@ -20,6 +20,10 @@ namespace SyncServer
         /// <summary>服务端口。默认7788</summary>
         [Description("服务端口。默认7788")]
         public Int32 Port { get; set; } = 7788;
+
+        /// <summary>文件存储根目录</summary>
+        [Description("文件存储根目录")]
+        public String RootPath { get; set; }
         #endregion
 
         #region 构造
