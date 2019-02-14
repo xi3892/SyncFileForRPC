@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysncEntity", "SysncEntity\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncClient", "SyncClient\SyncClient.csproj", "{D1AA0A78-5176-4639-93E6-78DE49D62C69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{05AB029A-73BB-4B35-92D3-F379D77D3B43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D1AA0A78-5176-4639-93E6-78DE49D62C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1AA0A78-5176-4639-93E6-78DE49D62C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1AA0A78-5176-4639-93E6-78DE49D62C69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05AB029A-73BB-4B35-92D3-F379D77D3B43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05AB029A-73BB-4B35-92D3-F379D77D3B43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05AB029A-73BB-4B35-92D3-F379D77D3B43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05AB029A-73BB-4B35-92D3-F379D77D3B43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

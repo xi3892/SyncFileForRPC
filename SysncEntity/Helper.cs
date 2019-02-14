@@ -9,30 +9,27 @@ using NewLife.Data;
 
 namespace SysncEntity
 {
-    class Helper
+    public class Helper
     {
-        /// <summary>写入文件</summary>
-        /// <param name="pk"></param>
-        public static void Write(Packet pk, String fileName, FileStream fs)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pklist"></param>
+        /// <param name="rootPath"></param>
+        public static void Write(IList<Packet> pklist, String rootPath)
         {
-            using (var bw = new BinaryWriter(fs))
+            var fname = pklist.FirstOrDefault().ToStr();
+            var path = Path.Combine(rootPath, fname + ".jpg");
+
+            using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
             {
-                var ms = new MemoryStream();
-                var stream = pk.GetStream();
-                var br = new BinaryReader(stream);
+                pklist.RemoveAt(0);
 
-                var fname = br.ReadString();
-                var index = br.ReadInt32();
-                var count = br.ReadInt32();
-                var data = br.ReadBytes(count);
-
-                if (!fname.EndsWithIgnoreCase(fileName)) return;
-
-                fs.Position = index * 1024 * 1024;
-                bw.Write(data);
-                bw.Flush();
-                bw.Dispose();
-                bw.Close();
+                foreach (var pk in pklist)
+                {
+                    var ms = pk.GetStream();
+                    fs.Write(ms.ReadBytes());
+                }
             }
         }
 
@@ -48,46 +45,25 @@ namespace SysncEntity
             using (var fs = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
             {
                 var pklist = new List<Packet>();
-                var offsetIndex = 0;
-                var ms = new MemoryStream();
-                var bw = new BinaryWriter(ms);
                 var fname = (new FileInfo(pathFile)).Name;
                 fname = fname.Substring(0, fname.LastIndexOf("."));
 
                 /*
                  * 写入顺序
                  * 1.文件名
-                 * 2.序号
-                 * 3.长度
-                 * 4.数据
+                 * 2.数据
                  */
-                var inum = 0;
+                pklist.Add(fname.GetBytes());
+
                 while (true)
                 {
-                    ms = new MemoryStream();
-                    var buffer = new Byte[size];
-                    var cindex = fs.Read(buffer, offsetIndex, size);
+                    if (fs.Position == fs.Length) break;
 
-                    // 文件名
-                    if (name.IsNullOrEmpty())
-                    {
-                        bw.Write(fname);
-                    }
-                    else
-                    {
-                        bw.Write(name);
-                    }
-                    // 序号
-                    bw.Write(inum);
-                    bw.Write(buffer.Length);
-                    bw.Write(buffer);
+                    var buffer = (fs.Length - fs.Position < size) ? new Byte[fs.Length - fs.Position] : new Byte[size];
+                    fs.Read(buffer, 0, buffer.Length);
 
-                    var pk = new Packet(ms);
+                    var pk = buffer;
                     pklist.Add(pk);
-
-                    if (cindex <= 0) break;
-                    offsetIndex += size;
-                    Interlocked.Increment(ref inum);
                 }
 
                 return pklist;
