@@ -8,6 +8,7 @@ using NewLife.Agent;
 using NewLife.Log;
 using NewLife.Net;
 using NewLife.Remoting;
+using SysncEntity;
 
 namespace SyncServer
 {
@@ -24,7 +25,7 @@ namespace SyncServer
             AddMenu('t', "数据测试", Test);
         }
 
-        ApiServer _Server;
+        RpcServer _Server;
         private void Init()
         {
             var sc = _Server;
@@ -32,7 +33,7 @@ namespace SyncServer
             {
                 var set = Setting.Current;
 
-                sc = new ApiServer(set.Port);
+                sc = new RpcServer(set.Port);
                 var ns = sc.EnsureCreate() as NetServer;
                 sc.ShowError = true;
 
@@ -40,9 +41,11 @@ namespace SyncServer
                 {
                     sc.Log = XTrace.Log;
                     ns.Log = XTrace.Log;
+#if DEBUG
                     ns.LogSend = true;
                     ns.LogReceive = true;
                     sc.EncoderLog = XTrace.Log;
+#endif
                 }
 
                 // 注册服务

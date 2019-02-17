@@ -4,17 +4,16 @@ using System.Text.RegularExpressions;
 using NewLife;
 using NewLife.Log;
 using NewLife.Net;
+using NewLife.Remoting;
 using NewLife.Security;
-using ApiClientX = NewLife.Remoting.ApiClient;
+//using ApiClientX = NewLife.Remoting.ApiClient;
 
-namespace SyncClient
+namespace SysncEntity
 {
     /// <summary>远程调用客户端，带连接池</summary>
-    public class RpcClient : ApiClientX
+    public class RpcClient : ApiClient
     {
         #region 属性
-        /// <summary>配置名</summary>
-        protected String ConfigName { get; set; }
         #endregion
 
         #region 构造
@@ -30,7 +29,8 @@ namespace SyncClient
             Init();
         }
 
-        private void Init() {
+        private void Init()
+        {
 
         }
         #endregion

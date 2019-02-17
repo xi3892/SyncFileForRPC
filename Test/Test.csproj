@@ -54,6 +54,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SyncClient\SyncClient.csproj">
+      <Project>{d1aa0a78-5176-4639-93e6-78de49d62c69}</Project>
+      <Name>SyncClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SysncEntity\SysncEntity.csproj">
       <Project>{451aba07-af1d-4851-bcf2-aedf0566dfc2}</Project>
       <Name>SysncEntity</Name>

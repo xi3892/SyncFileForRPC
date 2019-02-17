@@ -11,16 +11,22 @@ using SysncEntity;
 namespace SyncServer
 {
     [Api("Sync")]
-    class SyncService
+    public class SyncService
     {
         /// <summary>发送文件</summary>
         /// <param name="pkList"></param>
         [Api(nameof(SendFile))]
-        public Boolean SendFile(IList<Packet> pkList)
+        public Boolean SendFile(IList<byte[]> pkList)
         {
             var set = Setting.Current;
 
-            Helper.Write(pkList, set.RootPath);
+            var list = new List<Packet>();
+            foreach (var item in pkList)
+            {
+                list.Add(item);
+            }
+
+            Helper.Write(list, set.RootPath);
 
             return true;
         }
