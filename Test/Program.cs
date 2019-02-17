@@ -46,11 +46,6 @@ namespace Test
             Console.WriteLine(result);
         }
 
-        static void Test3()
-        {
-            var client = new Client();
-            var result = client.t();
-            Console.WriteLine(result);
-        }
+
     }
 }
