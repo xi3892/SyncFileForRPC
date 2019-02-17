@@ -11,10 +11,8 @@ namespace SysncEntity
 {
     public class Helper
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pklist"></param>
+        /// <summary></summary>
+        /// <param name="pklist">链包</param>
         /// <param name="rootPath"></param>
         public static void Write(IList<Packet> pklist, String rootPath)
         {
@@ -33,27 +31,26 @@ namespace SysncEntity
             }
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="pklist"></param>
-        ///// <param name="rootPath"></param>
-        //public static void Write(IList<Byte[]> pklist, String rootPath)
-        //{
-        //    var fname = (pklist.FirstOrDefault()).ToStr();
-        //    var path = Path.Combine(rootPath, fname + ".jpg");
+        /// <summary></summary>
+        /// <param name="pklist"></param>
+        /// <param name="rootPath"></param>
+        public static void Write(Packet pklist, String rootPath)
+        {
+            var fname = pklist.Data.ToStr();
+            var path = Path.Combine(rootPath, fname);
 
-        //    using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
-        //    {
-        //        pklist.RemoveAt(0);
+            using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+            {
+                while (true)
+                {
+                    pklist = pklist.Next;
+                    if (pklist == null) break;
 
-        //        foreach (var pk in pklist)
-        //        {
-        //            var ms = pk.GetStream();
-        //            fs.Write(ms.ReadBytes());
-        //        }
-        //    }
-        //}
+                    var ms = pklist.GetStream();
+                    fs.Write(ms.ReadBytes());
+                }
+            }
+        }
 
         /// <summary>从文件写入Packet</summary>
         /// <param name="pathFile">文件路径</param>
@@ -89,6 +86,39 @@ namespace SysncEntity
                 }
 
                 return pklist;
+            }
+        }
+
+        /// <summary>从文件写入Packet</summary>
+        /// <param name="pathFile">文件路径</param>
+        /// <param name="name">自定义文件名</param>
+        /// <param name="size">默认1024k</param>
+        /// <returns></returns>
+        public static Packet ReadPK(String pathFile, String name = "", Int32 size = 1024 * 1024)
+        {
+            if (pathFile.IsNullOrEmpty() || !File.Exists(pathFile)) return null;
+
+            using (var fs = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
+            {
+                var fname = name.IsNullOrEmpty() ? (new FileInfo(pathFile)).Name : name;
+
+                /*
+                 * 写入顺序
+                 * 1.文件名
+                 * 2.数据
+                 */
+                var pk = new Packet(fname.GetBytes());
+
+                while (true)
+                {
+                    if (fs.Position == fs.Length) break;
+
+                    var buffer = (fs.Length - fs.Position < size) ? new Byte[fs.Length - fs.Position] : new Byte[size];
+                    fs.Read(buffer, 0, buffer.Length);
+                    pk.Append(buffer);
+                }
+
+                return pk;
             }
         }
     }

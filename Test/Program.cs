@@ -25,9 +25,9 @@ namespace Test
 
         static void Test1()
         {
-            var list = Helper.Read("F:\\DSC_4015.JPG");
+            var list = Helper.ReadPK("F:\\321.txt");
 
-            //Helper.Write(list, "F:\\123");
+            Helper.Write(list, "F:\\123");
 
             //using (var fs = new FileStream("F:\\DSC_123.jpg", FileMode.OpenOrCreate, FileAccess.Write))
             //{
@@ -41,7 +41,7 @@ namespace Test
         static void Test2()
         {
             var client = new Client();
-            var result = client.SendFileF("F:\\DSC_4015.JPG");
+            var result = client.SendFile("F:\\DSC_4015.jpg");
 
             Console.WriteLine(result);
         }

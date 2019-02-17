@@ -15,6 +15,18 @@ namespace SyncServer
     {
         /// <summary>发送文件</summary>
         /// <param name="pkList"></param>
+        [Api(nameof(SendFilePK))]
+        public Boolean SendFilePK(Packet pkList)
+        {
+            var set = Setting.Current;
+
+            Helper.Write(pkList, set.RootPath);
+
+            return true;
+        }
+
+        /// <summary>发送文件</summary>
+        /// <param name="pkList"></param>
         [Api(nameof(SendFile))]
         public Boolean SendFile(IList<byte[]> pkList)
         {
