@@ -18,9 +18,6 @@ namespace SyncServer
 
     class MyService : AgentServiceBase<MyService>
     {
-        /// <summary>是否使用线程池调度。false表示禁用线程池，改用Agent线程</summary>
-        public Boolean Pooling { get; set; } = true;
-
         public MyService()
         {
             // 注册菜单，在控制台菜单中按 t 可以执行Test函数，主要用于临时处理数据

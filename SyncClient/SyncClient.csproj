@@ -47,8 +47,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpcClient.cs" />
+    <Compile Include="Setting.cs" />
+    <Compile Include="SynClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SysncEntity\SysncEntity.csproj">
