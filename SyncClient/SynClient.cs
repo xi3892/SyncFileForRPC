@@ -50,12 +50,22 @@ namespace SyncClient
             return result;
         }
 
-        /// <summary></summary>
-        /// <param name="pk"></param>
+        /// <summary>发送文件（采用字节流）</summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="fileName">指定保存文件名称(默认发送文件名)</param>
         /// <returns></returns>
         public Boolean SendFile(String path, String fileName = "")
         {
             return AsyncSendFile(path, fileName).Result;
+        }
+
+        /// <summary>发送文件（采用packet参数）</summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="fileName">指定保存文件名称(默认发送文件名)</param>
+        /// <returns></returns>
+        public Boolean SendFilePK(String path, String fileName = "")
+        {
+            return AsyncSendFilePK(path, fileName).Result;
         }
     }
 }

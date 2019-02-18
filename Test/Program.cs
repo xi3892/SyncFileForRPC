@@ -40,7 +40,9 @@ namespace Test
 
         static void Test2()
         {
+            // 初始化发送客户端
             var client = new Client();
+            // 发送文件
             var result = client.SendFile("F:\\DSC_4015.jpg");
 
             Console.WriteLine(result);
