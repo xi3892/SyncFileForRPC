@@ -23,31 +23,32 @@ namespace Test
             Console.ReadLine();
         }
 
+        /// <summary>
+        ///  测试序列化和反序列化
+        /// </summary>
         static void Test1()
         {
-            var list = Helper.ReadPK("F:\\321.txt");
+            var list = Helper.ReadPK2("D:\\图片.rar");
 
-            Helper.Write(list, "F:\\123");
+            foreach (var item in list)
+            {
+                Helper.Write2(item, "D:\\123");
 
-            //using (var fs = new FileStream("F:\\DSC_123.jpg", FileMode.OpenOrCreate, FileAccess.Write))
-            //{
-            //    foreach (var item in list)
-            //    {
-            //        Helper.Write(item, "DSC_123.JPG", fs);
-            //    }
-            //}
+            }
+
         }
 
+        /// <summary>
+        ///  测试rpc接收
+        /// </summary>
         static void Test2()
         {
             // 初始化发送客户端
             var client = new Client();
             // 发送文件
-            var result = client.SendFile("F:\\DSC_4015.jpg");
+            var result = client.SendFilePK2("D:\\321.jpg");
 
             Console.WriteLine(result);
         }
-
-
     }
 }

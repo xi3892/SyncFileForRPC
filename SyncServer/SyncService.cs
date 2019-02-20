@@ -25,6 +25,18 @@ namespace SyncServer
             return true;
         }
 
+        /// <summary></summary>
+        /// <param name="pk"></param>
+        /// <returns></returns>
+        [Api(nameof(SendFilePK2))]
+        public Boolean SendFilePK2(Packet pk)
+        {
+            var set = Setting.Current;
+            Helper.Write2(pk, set.RootPath);
+
+            return true;
+        }
+
         /// <summary>发送文件</summary>
         /// <param name="pkList"></param>
         [Api(nameof(SendFile))]

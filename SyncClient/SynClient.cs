@@ -27,7 +27,7 @@ namespace SyncClient
         public async Task<Boolean> AsyncSendFile(String path, String fileName = "")
         {
             if (!File.Exists(path)) throw new FileNotFoundException($"指定路径【{path}】文件不存在!");
-            var pkList = Helper.Read(path);
+            var pkList = Helper.Read(path, fileName);
             if (pkList == null) return false;
 
             var result = await InvokeAsync<Boolean>("Sync/SendFile", new { pkList });
@@ -42,7 +42,7 @@ namespace SyncClient
         public async Task<Boolean> AsyncSendFilePK(String path, String fileName = "")
         {
             if (!File.Exists(path)) throw new FileNotFoundException($"指定路径【{path}】文件不存在!");
-            var pkList = Helper.ReadPK(path);
+            var pkList = Helper.ReadPK(path, fileName);
             if (pkList == null) return false;
 
             var result = await InvokeAsync<Boolean>("Sync/SendFilePK", new { pkList });
@@ -67,5 +67,26 @@ namespace SyncClient
         {
             return AsyncSendFilePK(path, fileName).Result;
         }
+
+        /// <summary>异步发送文件</summary>
+        /// <param name="path">发送文件路径</param>
+        /// <param name="fileName">指定保存文件名称(默认发送文件名)</param>
+        /// <returns></returns>
+        public Boolean SendFilePK2(String path, String fileName = "")
+        {
+            if (!File.Exists(path)) throw new FileNotFoundException($"指定路径【{path}】文件不存在!");
+
+            var pkList = Helper.ReadPK2(path, fileName);
+            if (pkList == null || pkList.Count < 1) return false;
+
+            var flag = true;
+            foreach (var pk in pkList)
+            {
+                flag = InvokeAsync<Boolean>("Sync/SendFilePK2", new { pk }).Result;
+            }
+
+            return flag;
+        }
+
     }
 }

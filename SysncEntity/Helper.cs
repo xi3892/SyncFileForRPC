@@ -17,7 +17,7 @@ namespace SysncEntity
         public static void Write(IList<Packet> pklist, String rootPath)
         {
             var fname = pklist.FirstOrDefault().ToStr();
-            var path = Path.Combine(rootPath, fname + ".jpg");
+            var path = Path.Combine(rootPath, fname);
 
             using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
             {
@@ -52,6 +52,26 @@ namespace SysncEntity
             }
         }
 
+        /// <summary></summary>
+        /// <param name="pk"></param>
+        /// <param name="rootPath"></param>
+        public static void Write2(Packet pk, String rootPath)
+        {
+            var fname = pk.Data.ToStr();
+            var path = Path.Combine(rootPath, fname);
+            var fi = new FileInfo(path);
+
+            pk = pk.Next;
+            if (pk == null) return;
+
+            using (var fs = fi.OpenWrite())
+            {
+                fs.Position = fs.Length;
+                fs.Write(pk.Data);
+                fs.Flush();
+            }
+        }
+
         /// <summary>从文件写入Packet</summary>
         /// <param name="pathFile">文件路径</param>
         /// <param name="name">自定义文件名</param>
@@ -65,7 +85,7 @@ namespace SysncEntity
             {
                 var pklist = new List<Byte[]>();
                 var fname = name.IsNullOrEmpty() ? (new FileInfo(pathFile)).Name : name;
-                if (fname.LastIndexOf(".") > -1) fname = fname.Substring(0, fname.LastIndexOf("."));
+                //if (fname.LastIndexOf(".") > -1) fname = fname.Substring(0, fname.LastIndexOf("."));
 
                 /*
                  * 写入顺序
@@ -119,6 +139,41 @@ namespace SysncEntity
                 }
 
                 return pk;
+            }
+        }
+
+        /// <summary>从文件写入Packet列表</summary>
+        /// <param name="pathFile"></param>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public static IList<Packet> ReadPK2(String pathFile, String name = "", Int32 size = 1024 * 1024)
+        {
+            if (pathFile.IsNullOrEmpty() || !File.Exists(pathFile)) return null;
+
+            using (var fs = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
+            {
+                var fname = name.IsNullOrEmpty() ? (new FileInfo(pathFile)).Name : name;
+
+                /*
+                 * 写入顺序
+                 * 1.文件名
+                 * 2.数据
+                 */
+                var list = new List<Packet>();
+
+                while (true)
+                {
+                    if (fs.Position == fs.Length) break;
+                    var pk = new Packet(fname.GetBytes());
+                    var buffer = (fs.Length - fs.Position < size) ? new Byte[fs.Length - fs.Position] : new Byte[size];
+                    fs.Read(buffer, 0, buffer.Length);
+                    pk.Append(buffer);
+
+                    list.Add(pk);
+                }
+
+                return list;
             }
         }
     }

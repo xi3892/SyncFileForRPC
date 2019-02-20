@@ -9,7 +9,7 @@ using NewLife.Xml;
 namespace SyncServer
 {
     /// <summary>配置</summary>
-    [XmlConfigFile("Config/BillServer.config", 15000)]
+    [XmlConfigFile("Config/SyncServer.config", 15000)]
     public class Setting : XmlConfig<Setting>
     {
         #region 属性
@@ -23,7 +23,7 @@ namespace SyncServer
 
         /// <summary>文件存储根目录</summary>
         [Description("文件存储根目录")]
-        public String RootPath { get; set; } = "F:\\123";
+        public String RootPath { get; set; } = "D:\\123";
         #endregion
 
         #region 构造
