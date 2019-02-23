@@ -28,11 +28,11 @@ namespace Test
         /// </summary>
         static void Test1()
         {
-            var list = Helper.ReadPK2("D:\\图片.rar");
+            var list = Helper.ReadPK2("f:\\图片.rar");
 
             foreach (var item in list)
             {
-                Helper.Write2(item, "D:\\123");
+                Helper.Write2(item, "F:\\123");
 
             }
 
@@ -46,7 +46,7 @@ namespace Test
             // 初始化发送客户端
             var client = new Client();
             // 发送文件
-            var result = client.SendFilePK2("D:\\321.jpg");
+            var result = client.SendFilePK2("f:\\图片.rar");
 
             Console.WriteLine(result);
         }

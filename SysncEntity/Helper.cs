@@ -57,17 +57,22 @@ namespace SysncEntity
         /// <param name="rootPath"></param>
         public static void Write2(Packet pk, String rootPath)
         {
-            var fname = pk.Data.ToStr();
+            var s = pk.GetStream();
+            var br = new BinaryReader(s);
+            var fname = br.ReadString();
+
             var path = Path.Combine(rootPath, fname);
-            var fi = new FileInfo(path);
+            // 处理文件夹避免后续无法正常写入文件
+            if (!Directory.Exists(rootPath)) Directory.CreateDirectory(rootPath);
 
-            pk = pk.Next;
-            if (pk == null) return;
+            if (s.Position == s.Length) return;
+            //pk = pk.Next;
+            //if (pk == null) return;
 
-            using (var fs = fi.OpenWrite())
+            using (var fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 fs.Position = fs.Length;
-                fs.Write(pk.Data);
+                fs.Write(s.ReadBytes());
                 fs.Flush();
             }
         }
@@ -154,23 +159,31 @@ namespace SysncEntity
             using (var fs = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
             {
                 var fname = name.IsNullOrEmpty() ? (new FileInfo(pathFile)).Name : name;
-
                 /*
                  * 写入顺序
                  * 1.文件名
                  * 2.数据
                  */
                 var list = new List<Packet>();
-
                 while (true)
                 {
                     if (fs.Position == fs.Length) break;
-                    var pk = new Packet(fname.GetBytes());
-                    var buffer = (fs.Length - fs.Position < size) ? new Byte[fs.Length - fs.Position] : new Byte[size];
-                    fs.Read(buffer, 0, buffer.Length);
-                    pk.Append(buffer);
 
-                    list.Add(pk);
+                    using (var sm = new MemoryStream())
+                    {
+                        var br = new BinaryWriter(sm);
+                        br.Write(fname);
+
+                        var buffer = (fs.Length - fs.Position < size - sm.Length) ? new Byte[fs.Length - fs.Position] : new Byte[size - sm.Length];
+
+                        fs.Read(buffer, 0, buffer.Length);
+                        sm.Write(buffer);
+                        sm.Position = 0;
+
+                        var pk = new Packet(sm);
+
+                        list.Add(pk);
+                    }
                 }
 
                 return list;

@@ -82,7 +82,8 @@ namespace SyncClient
             var flag = true;
             foreach (var pk in pkList)
             {
-                flag = InvokeAsync<Boolean>("Sync/SendFilePK2", new { pk }).Result;
+                // 切记传递PACKET对象，而不能以匿名对象成员属性方式传递，否则会被json序列化
+                flag = InvokeAsync<Boolean>("Sync/SendFilePK2", pk).Result;
             }
 
             return flag;
