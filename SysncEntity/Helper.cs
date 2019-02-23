@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NewLife.Data;
+using NewLife.Remoting;
 
 namespace SysncEntity
 {
@@ -176,6 +177,7 @@ namespace SysncEntity
 
                         var buffer = (fs.Length - fs.Position < size - sm.Length) ? new Byte[fs.Length - fs.Position] : new Byte[size - sm.Length];
 
+
                         fs.Read(buffer, 0, buffer.Length);
                         sm.Write(buffer);
                         sm.Position = 0;
@@ -187,6 +189,53 @@ namespace SysncEntity
                 }
 
                 return list;
+            }
+        }
+
+        /// <summary>异步读写</summary>
+        /// <param name="pathFile"></param>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public static Boolean ReadAndWrite(ApiClient client, String pathFile, String name = "", Int32 size = 1024 * 1024)
+        {
+            if (pathFile.IsNullOrEmpty() || !File.Exists(pathFile)) return false;
+
+            using (var fs = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
+            {
+                var fname = name.IsNullOrEmpty() ? (new FileInfo(pathFile)).Name : name;
+                /*
+                 * 写入顺序
+                 * 1.文件名
+                 * 2.数据
+                 */
+                //var list = new List<Packet>();
+                var flag = true;
+                while (flag)
+                {
+                    if (fs.Position == fs.Length) break;
+
+                    using (var sm = new MemoryStream())
+                    {
+                        var br = new BinaryWriter(sm);
+                        br.Write(fname);
+
+                        var buffer = (fs.Length - fs.Position < size - sm.Length) ? new Byte[fs.Length - fs.Position] : new Byte[size - sm.Length];
+
+                        fs.Read(buffer, 0, buffer.Length);
+                        sm.Write(buffer);
+                        sm.Position = 0;
+
+                        var pk = new Packet(sm);
+
+                        flag = client.Invoke<Boolean>("Sync/SendFilePK2", pk);
+
+                        //if (!flag) break;
+                        //list.Add(pk);
+                    }
+                }
+
+                return flag;
             }
         }
     }

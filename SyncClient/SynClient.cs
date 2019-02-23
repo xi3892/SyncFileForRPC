@@ -77,6 +77,7 @@ namespace SyncClient
             if (!File.Exists(path)) throw new FileNotFoundException($"指定路径【{path}】文件不存在!");
 
             var pkList = Helper.ReadPK2(path, fileName);
+            Helper.ReadAndWrite(this, path, fileName);
             if (pkList == null || pkList.Count < 1) return false;
 
             var flag = true;
@@ -89,5 +90,15 @@ namespace SyncClient
             return flag;
         }
 
+        /// <summary>边读边发送，减少内存占用（适用大文件）</summary>
+        /// <param name="path"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public Boolean SendBigFilePK(String path, String fileName = "")
+        {
+            if (!File.Exists(path)) throw new FileNotFoundException($"指定路径【{path}】文件不存在!");
+
+            return Helper.ReadAndWrite(this, path, fileName);
+        }
     }
 }

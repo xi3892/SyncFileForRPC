@@ -46,7 +46,7 @@ namespace Test
             // 初始化发送客户端
             var client = new Client();
             // 发送文件
-            var result = client.SendFilePK2("f:\\图片.rar");
+            var result = client.SendBigFilePK("f:\\图片.rar");
 
             Console.WriteLine(result);
         }
